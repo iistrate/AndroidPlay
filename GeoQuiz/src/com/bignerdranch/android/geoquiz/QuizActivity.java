@@ -1,7 +1,10 @@
 package com.bignerdranch.android.geoquiz;
 
+import android.annotation.TargetApi;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -13,26 +16,34 @@ import android.widget.Toast;
 
 public class QuizActivity extends Activity {
 	
+	//constants
 	private static final String Tag = "QuizActivity";
 	private static final String KEY_INDEX = "index";
+	public static final String KEY_BOOLEAN = "boolean";
 	
+	//buttons
 	private Button mTrueButton;
 	private Button mFalseButton;
 	private Button mCheatButton;
 	private ImageButton mNextButton;
 	private ImageButton mPreviousButton;
-	
 	private TextView mQuestionTextView;
+	private TextView mBuildVersion;
+	
+	//composition
 	private TrueFalse[] mQuestionBank = new TrueFalse[] {
-			new TrueFalse(R.string.question_oceans, true),
-			new TrueFalse(R.string.question_mideast, false),
-			new TrueFalse(R.string.question_africa, false),
-			new TrueFalse(R.string.question_americas, true),
-			new TrueFalse(R.string.question_asia, true)
+			new TrueFalse(R.string.question_oceans, true, false),
+			new TrueFalse(R.string.question_mideast, false, false),
+			new TrueFalse(R.string.question_africa, false, false),
+			new TrueFalse(R.string.question_americas, true, false),
+			new TrueFalse(R.string.question_asia, true, false)
 	};
+	
+	//variables
 	private int mCurrentIndex = 0;
 	private boolean mIsCheater;
 	
+	//get other activities
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (data == null) {
@@ -45,11 +56,10 @@ public class QuizActivity extends Activity {
 		int question = mQuestionBank[mCurrentIndex].getQuestion();
 		mQuestionTextView.setText(question);
 	}
+
 	private void checkAnswer(boolean userPressedTrue) {
-		boolean answerIsTrue = mQuestionBank[mCurrentIndex].isTrueQuestion();
-		
-		int messageResId = 0;
-		
+		boolean answerIsTrue = mQuestionBank[mCurrentIndex].isTrueQuestion();		
+		int messageResId = 0;		
 		if (mIsCheater) {
 			messageResId = R.string.judgement_toast;
 		} else {		
@@ -62,11 +72,20 @@ public class QuizActivity extends Activity {
 		Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show();
 	}
 	
+	@TargetApi(11)
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.d(Tag, "OnCreat Bundle Called");
 		setContentView(R.layout.activity_quiz);
+		
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			ActionBar actionbar = getActionBar();
+			actionbar.setSubtitle("Bodies of water");
+		}
+		mBuildVersion = (TextView)findViewById(R.id.build_version);
+		mBuildVersion.setText("API level " + Build.VERSION.SDK_INT);
+		
 		
 		mQuestionTextView = (TextView)findViewById(R.id.question_text_view);
 		mQuestionTextView.setOnClickListener(new View.OnClickListener() {
@@ -95,8 +114,8 @@ public class QuizActivity extends Activity {
 		mNextButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mCurrentIndex = (mCurrentIndex < 4) ? (mCurrentIndex + 1) : 0;
-				mIsCheater = false;
+				mCurrentIndex = (mCurrentIndex < (mQuestionBank.length - 1)) ? (mCurrentIndex + 1) : 0;
+				mIsCheater = mQuestionBank[mCurrentIndex].isCheater();
 				updateQuestion();
 			}
 		});
@@ -104,8 +123,8 @@ public class QuizActivity extends Activity {
 		mPreviousButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mCurrentIndex = (mCurrentIndex > 0) ? (mCurrentIndex - 1) : 4;
-				mIsCheater = false;
+				mCurrentIndex = (mCurrentIndex > 0) ? (mCurrentIndex - 1) : (mQuestionBank.length - 1);
+				mIsCheater = mQuestionBank[mCurrentIndex].isCheater();
 				updateQuestion();
 			}
 		});
@@ -122,6 +141,8 @@ public class QuizActivity extends Activity {
 		
 		if (savedInstanceState != null) {
 			mCurrentIndex = savedInstanceState.getInt(KEY_INDEX, 0);
+			mIsCheater = savedInstanceState.getBoolean(KEY_BOOLEAN, false);
+			mQuestionBank[mCurrentIndex].setCheated(mIsCheater);
 		}
 		
 		updateQuestion();
@@ -131,6 +152,7 @@ public class QuizActivity extends Activity {
 		super.onSaveInstanceState(savedInstanceState);
 		Log.i(Tag, "onSaveInstanceState");
 		savedInstanceState.putInt(KEY_INDEX, mCurrentIndex);
+		savedInstanceState.putBoolean(KEY_BOOLEAN, mIsCheater);
 	}
 	
 	

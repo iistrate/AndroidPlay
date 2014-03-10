@@ -51,4 +51,10 @@
 	        android:contentDescription="@string/next_question_button"
 	    />
 	</LinearLayout>
+	<TextView
+	    android:id="@+id/build_version"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:padding="20dp"
+	/>
 </LinearLayout>
