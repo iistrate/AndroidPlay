@@ -50,6 +50,7 @@ public class QuizActivity extends Activity {
 			return;
 		}
 		mIsCheater = data.getBooleanExtra(CheatActivity.EXTRA_ANSWER_SHOWN, false);
+		mQuestionBank[mCurrentIndex].setCheated(mIsCheater);
 	}
 	
 	private void updateQuestion() {
