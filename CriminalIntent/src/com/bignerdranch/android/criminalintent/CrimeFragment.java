@@ -1,5 +1,9 @@
 package com.bignerdranch.android.criminalintent;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -7,11 +11,19 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 
 public class CrimeFragment extends Fragment {
+	
 	private Crime mCrime;
 	private EditText mTitleField;
+	private Button mDateButton;
+	private CheckBox mSolvedCheckbox;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -31,6 +43,24 @@ public class CrimeFragment extends Fragment {
 			}
 			public void afterTextChanged(Editable c) {
 				//blank
+			}
+		});
+		
+		mDateButton = (Button)v.findViewById(R.id.crime_date);
+		//mDateButton.setText(DateFormat.getDateInstance().format((mCrime.getDate())));
+		String monthFormat =  Build.VERSION.SDK_INT < 9 ? "MM" : "LLL";
+		DateFormat df = new SimpleDateFormat("E, " + monthFormat + " dd, yyyy");
+		mDateButton.setText(df.format(mCrime.getDate()));
+		mDateButton.setEnabled(false);
+		
+		mSolvedCheckbox = (CheckBox)v.findViewById(R.id.crime_solved);
+		
+		mSolvedCheckbox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
+				//set crime to solved
+				mCrime.setSolved(isChecked);
 			}
 		});
 		
