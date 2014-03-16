@@ -1,4 +1,4 @@
 AndroidPlay
 ===========
 
-Playing with Android Software Engineering with Java/Android Capstone
+Playing with Android / Software Engineering with Java/Android Capstone
