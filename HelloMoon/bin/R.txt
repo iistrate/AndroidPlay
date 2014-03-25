@@ -339,6 +339,7 @@ int string action_settings 0x7f0b000f
 int string app_name 0x7f0b000d
 int string hello_world 0x7f0b000e
 int string hellomoon_description 0x7f0b0012
+int string hellomoon_image_description 0x7f0b0013
 int string hellomoon_play 0x7f0b0010
 int string hellomoon_stop 0x7f0b0011
 int style AppBaseTheme 0x7f0c0083
