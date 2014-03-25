@@ -2,8 +2,11 @@ package com.bignerdranch.android.criminalintent;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.UUID;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -22,6 +25,8 @@ import android.widget.EditText;
 public class CrimeFragment extends Fragment {
 	public static final String EXTRA_CRIME_ID = "com.bignerdranch.android.criminalintent.crime_id";
 	private static final String DIALOG_DATE = "date";
+	private static final int REQUEST_DATE = 0;
+	
 	private Crime mCrime;
 	private EditText mTitleField;
 	private Button mDateButton;
@@ -52,15 +57,15 @@ public class CrimeFragment extends Fragment {
 		});
 		
 		mDateButton = (Button)v.findViewById(R.id.crime_date);
-		//mDateButton.setText(DateFormat.getDateInstance().format((mCrime.getDate())));
-		String monthFormat =  Build.VERSION.SDK_INT < 9 ? "MM" : "LLL";
-		DateFormat df = new SimpleDateFormat("E, " + monthFormat + " dd, yyyy");
-		mDateButton.setText(df.format(mCrime.getDate()));
+		updateDate();
 		mDateButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				FragmentManager fm = getActivity().getSupportFragmentManager();
-				DatePickerFragment dialog = new DatePickerFragment();
+				FragmentManager fm = getActivity()
+						.getSupportFragmentManager();
+				DatePickerFragment dialog = new DatePickerFragment()
+											.newInstance(mCrime.getDate());
+				dialog.setTargetFragment(CrimeFragment.this, REQUEST_DATE);
 				dialog.show(fm, DIALOG_DATE);
 			}
 		});
@@ -87,5 +92,22 @@ public class CrimeFragment extends Fragment {
 		fragment.setArguments(args);
 		
 		return fragment;
+	}
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (resultCode != Activity.RESULT_OK) {
+			return;
+		}
+		if (requestCode == REQUEST_DATE) {
+			Date date = (Date)data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
+			mCrime.setDate(date);
+			updateDate();
+		}
+	}
+	private void updateDate() {
+		String monthFormat =  Build.VERSION.SDK_INT < 9 ? "MM" : "LLL";
+		DateFormat df = new SimpleDateFormat("E, " + monthFormat + " dd, yyyy");
+		mDateButton.setText(df.format(mCrime.getDate()));
 	}
 }
