@@ -16,9 +16,10 @@ public class CrimeLab {
 	private static CrimeLab sCrimeLab;
 	private Context mAppContext;
 	
-	private CrimeLab(Context appContext) {
+	public CrimeLab(Context appContext) {
 		mAppContext = appContext;
 		mSerializer = new CriminalIntentJSONSerializer(mAppContext, FILENAME);
+		mCrimes = new ArrayList<Crime>();
 		
 		try {
 			mCrimes = mSerializer.loadCrimes();
@@ -29,6 +30,9 @@ public class CrimeLab {
 	}
 	public void addCrime(Crime c) {
 		mCrimes.add(c);
+	}
+	public void delete(Crime c) {
+		mCrimes.remove(c);
 	}
 	public static CrimeLab get(Context c) {
 		if (sCrimeLab == null) {

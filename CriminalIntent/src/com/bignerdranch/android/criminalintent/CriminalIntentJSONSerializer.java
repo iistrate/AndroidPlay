@@ -30,7 +30,7 @@ public class CriminalIntentJSONSerializer {
 		ArrayList<Crime> crimes = new ArrayList<Crime>();
 		BufferedReader reader = null;
 		try {
-			//opan and read the file into a StringBuilder
+			//open and read the file into a StringBuilder
 			InputStream in = mContext.openFileInput(mFilename);
 			reader = new BufferedReader(new InputStreamReader(in));
 			StringBuilder jsonString = new StringBuilder();
