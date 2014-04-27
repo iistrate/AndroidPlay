@@ -27,7 +27,7 @@ public class RemoteControlFragment extends Fragment {
 			public void onClick(View v) {
 				TextView textView = (TextView)v;
 				String working = mWorkingTextView.getText().toString();
-				String text = mSelectedTextView.getText().toString();
+				String text = textView.getText().toString();
 				if (working.equals("0")) {
 					mWorkingTextView.setText(text);
 				}

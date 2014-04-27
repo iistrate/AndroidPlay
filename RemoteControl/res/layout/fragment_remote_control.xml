@@ -2,25 +2,28 @@
     android:id="@+id/fragment_remote_control_tableLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:stretchColumns="*" >
+    android:stretchColumns="*"
+    android:background="@drawable/remote_background" >
     <TextView 
         android:id="@+id/fragment_remote_control_selectedTextView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="2"
         android:layout_gravity="center"
+        android:background="@drawable/window_patch"
         android:text="0"
+        android:textColor="#ffffff"
         android:textSize="50dp" />
     <TextView 
         android:id="@+id/fragment_remote_control_workingTextView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:background="@drawable/bar_patch"
         android:layout_margin="15dp"
-        android:background="#555555"
         android:layout_gravity="center"
         android:text="0"
-        android:textColor="#cccccc"
+     	android:textStyle="italic"
         android:textSize="20dp" />
 	<include 
 	    android:layout_weight="1"
